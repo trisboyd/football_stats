@@ -23,29 +23,18 @@ pub struct Player {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Game {
     pub id: u32,
-    #[serde(rename = "season")]
-    pub year: u32,
-    pub week: u32,
-    #[serde(rename = "season_type")]
-    pub season_type: String,
-    #[serde(rename = "home_team")]
-    pub home_team: String,
-    #[serde(rename = "away_team")]
-    pub away_team: String,
-    #[serde(rename = "home_points")]
-    pub home_points: Option<u32>,
-    #[serde(rename = "away_points")]
-    pub away_points: Option<u32>,
     pub teams: Vec<ApiTeamStats>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ApiTeamStats {
+    #[serde(rename = "team")]
     pub school: String,
     pub conference: Option<String>,
     pub home_away: Option<String>,
     pub points: Option<u32>,
+    #[serde(rename = "categories")]
     pub stats: Vec<ApiStatCategory>,
 }
 
