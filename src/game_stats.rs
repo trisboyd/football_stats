@@ -72,29 +72,7 @@ async fn process_game_response(
     Ok(())
 }
 
-fn extract_qb_stats_from_api_data(
-    team_stats: &ApiTeamStats, 
-    opponent: &str, 
-    week: u32
-) -> Vec<QBStats> {
-    let mut qb_data: HashMap<String, QBStatsBuilder> = HashMap::new();
-    
-    // Process each stat category
-    for stat_category in &team_stats.stats {
-        match stat_category.name.as_str() {
-            "passing" => process_passing_stats(&stat_category.types, &mut qb_data),
-            "rushing" => process_rushing_stats(&stat_category.types, &mut qb_data),
-            _ => {} // Ignore other categories for now
-        }
-    }
-    
-    // Convert builders to final QB stats
-    qb_data.into_iter()
-        .filter_map(|(player_name, builder)| {
-            builder.build(&player_name, &team_stats.school, opponent, week)
-        })
-        .collect()
-}
+// REMOVED: extract_qb_stats_from_api_data function - replaced with exact sack data version
 
 async fn extract_qb_stats_with_sack_data(
     teams: &[ApiTeamStats],
@@ -119,11 +97,18 @@ async fn extract_qb_stats_with_sack_data(
         None => return Vec::new(),
     };
     
-    // Get exact sack data from plays API
+    // Get exact sack data from plays API (fallback if not available)
     let qb_sacks = match get_qb_sacks_from_plays_api(&target_stats.school, year, week).await {
-        Ok(sacks) => sacks,
+        Ok(sacks) => {
+            if sacks.is_empty() {
+                println!("⚠️  No play-by-play data available for {} Week {} - using aggregate stats only", year, week);
+                println!("    (True rushing yards = aggregate rushing yards, sack data unavailable)");
+            }
+            sacks
+        },
         Err(e) => {
-            println!("Warning: Could not get sack data from plays API: {}", e);
+            println!("⚠️  Could not access play-by-play data: {}", e);
+            println!("    Using aggregate stats only (True rushing yards = aggregate rushing yards)");
             HashMap::new()
         }
     };
@@ -151,41 +136,7 @@ async fn extract_qb_stats_with_sack_data(
         .collect()
 }
 
-#[derive(Default, Debug)]
-struct SackData {
-    total_sacks: i32,
-    // For now, we'll estimate sack yardage. In future, we could try to get this from play-by-play data
-    estimated_sack_yards: i32,
-}
-
-fn extract_sack_data(opponent_stats: &ApiTeamStats) -> SackData {
-    let mut sack_data = SackData::default();
-    
-    for stat_category in &opponent_stats.stats {
-        if stat_category.name == "defensive" {
-            for stat_type in &stat_category.types {
-                if stat_type.name == "SACKS" {
-                    // Sum up all sacks by defensive players
-                    for athlete in &stat_type.athletes {
-                        if let Ok(sacks) = athlete.stat.parse::<i32>() {
-                            sack_data.total_sacks += sacks;
-                        }
-                    }
-                    
-                    // Estimate sack yardage (typical sack loses 7 yards in college football)
-                    sack_data.estimated_sack_yards = sack_data.total_sacks * 7;
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    
-    println!("Extracted sack data: {} sacks, estimated {} yards lost", 
-        sack_data.total_sacks, sack_data.estimated_sack_yards);
-    
-    sack_data
-}
+// REMOVED: SackData struct and extract_sack_data function - replaced with exact play-by-play data
 
 #[derive(Default)]
 struct QBStatsBuilder {
@@ -200,123 +151,9 @@ struct QBStatsBuilder {
 }
 
 impl QBStatsBuilder {
-    fn build(self, player: &str, team: &str, opponent: &str, week: u32) -> Option<QBStats> {
-        // Only include players who have passing attempts (QBs)
-        if self.passing_attempts == 0 {
-            return None;
-        }
-        
-        // Calculate derived stats
-        let yards_per_attempt = if self.passing_attempts > 0 {
-            self.passing_yards as f64 / self.passing_attempts as f64
-        } else {
-            0.0
-        };
-        
-        let int_rate = if self.passing_attempts > 0 {
-            (self.interceptions as f64 / self.passing_attempts as f64) * 100.0
-        } else {
-            0.0
-        };
-        
-        // For now, we don't have sack data directly, so we'll set these to 0
-        // In a more complete implementation, we'd look for defensive stats against this team
-        let sacks = 0;
-        let sack_rate = 0.0;
-        let yards_lost_from_sacks = 0;
-        
-        // True rushing yards (in college, sack yards are deducted from rushing)
-        let true_rushing_yards = self.rushing_yards; // We'd add back sack yards if we had them
-        
-        Some(QBStats {
-            player: player.to_string(),
-            team: team.to_string(),
-            opponent: opponent.to_string(),
-            week,
-            passing_attempts: self.passing_attempts,
-            completions: self.completions,
-            passing_yards: self.passing_yards,
-            yards_per_attempt,
-            passing_tds: self.passing_tds,
-            interceptions: self.interceptions,
-            int_rate,
-            sacks,
-            sack_rate,
-            true_rushing_yards,
-            yards_lost_from_sacks,
-        })
-    }
+    // REMOVED: build method without sack data - we always use exact sack data now
 
-    fn build_with_sacks(self, player: &str, team: &str, opponent: &str, week: u32, sack_data: &SackData) -> Option<QBStats> {
-        // Only include players who have passing attempts (QBs)
-        if self.passing_attempts == 0 {
-            return None;
-        }
-        
-        // Calculate derived stats
-        let yards_per_attempt = if self.passing_attempts > 0 {
-            self.passing_yards as f64 / self.passing_attempts as f64
-        } else {
-            0.0
-        };
-        
-        let int_rate = if self.passing_attempts > 0 {
-            (self.interceptions as f64 / self.passing_attempts as f64) * 100.0
-        } else {
-            0.0
-        };
-        
-        // Estimate QB's share of team sacks based on passing attempts
-        // This is a rough estimate - in reality, we'd want play-by-play data to know exactly which QB was sacked
-        let total_dropbacks = self.passing_attempts + self.rushing_attempts;
-        let estimated_qb_sacks = if total_dropbacks > 0 {
-            // Estimate this QB's share of the sacks based on their dropback proportion
-            // This is imperfect but better than assuming 0
-            let qb_share = self.passing_attempts as f64 / (self.passing_attempts as f64 + 10.0); // Assume some baseline
-            (sack_data.total_sacks as f64 * qb_share).round() as i32
-        } else {
-            0
-        };
-        
-        let estimated_qb_sack_yards = if total_dropbacks > 0 {
-            let qb_share = self.passing_attempts as f64 / (self.passing_attempts as f64 + 10.0);
-            (sack_data.estimated_sack_yards as f64 * qb_share).round() as i32
-        } else {
-            0
-        };
-        
-        // Calculate sack rate (sacks per passing attempt)
-        let sack_rate = if self.passing_attempts > 0 {
-            (estimated_qb_sacks as f64 / self.passing_attempts as f64) * 100.0
-        } else {
-            0.0
-        };
-        
-        // True rushing yards: add back estimated sack yardage to get actual running yardage
-        // In college, sacks count as negative rushing yards
-        let true_rushing_yards = self.rushing_yards + estimated_qb_sack_yards;
-        
-        println!("QB {}: rushing_yards={}, estimated_sack_yards={}, true_rushing_yards={}", 
-            player, self.rushing_yards, estimated_qb_sack_yards, true_rushing_yards);
-        
-        Some(QBStats {
-            player: player.to_string(),
-            team: team.to_string(),
-            opponent: opponent.to_string(),
-            week,
-            passing_attempts: self.passing_attempts,
-            completions: self.completions,
-            passing_yards: self.passing_yards,
-            yards_per_attempt,
-            passing_tds: self.passing_tds,
-            interceptions: self.interceptions,
-            int_rate,
-            sacks: estimated_qb_sacks,
-            sack_rate,
-            true_rushing_yards,
-            yards_lost_from_sacks: estimated_qb_sack_yards,
-        })
-    }
+    // REMOVED: build_with_sacks method - replaced with exact play-by-play data
 
     fn build_with_exact_sacks(self, player: &str, team: &str, opponent: &str, week: u32, sacks: i32, yards_lost_from_sacks: i32) -> Option<QBStats> {
         // Only include players who have passing attempts (QBs)
@@ -344,9 +181,18 @@ impl QBStatsBuilder {
             0.0
         };
         
-        // True rushing yards: subtract sack yardage from rushing stats to get actual running yardage
-        // In college, sacks count as negative rushing yards, so we need to remove that impact
-        let true_rushing_yards = self.rushing_yards - yards_lost_from_sacks;
+        // True rushing yards calculation
+        // When we have exact sack data: add back sack yardage to get actual running yardage
+        // When no sack data available: use aggregate rushing yards as-is
+        let true_rushing_yards = if sacks == 0 && yards_lost_from_sacks == 0 {
+            // No sack data available - use aggregate rushing yards
+            self.rushing_yards
+        } else {
+            // Exact sack data available - subtract sack losses to get true rushing
+            // In college, sacks count as negative rushing yards, so we add back the sack losses
+            // to get the yards gained on actual rushing attempts (not including sacks)
+            self.rushing_yards - yards_lost_from_sacks
+        };
         
         println!("QB {}: rushing_yards={}, sack_yards={}, true_rushing_yards={}", 
             player, self.rushing_yards, yards_lost_from_sacks, true_rushing_yards);
