@@ -75,3 +75,61 @@ pub struct QBStats {
     pub true_rushing_yards: i32,
     pub yards_lost_from_sacks: i32,
 }
+
+// Running Back Stats
+#[derive(Debug, Serialize, Clone)]
+pub struct RunningBackStats {
+    pub player: String,
+    pub team: String,
+    pub opponent: String,
+    pub week: u32,
+    pub rushing_attempts: u32,
+    pub rushing_yards: i32,
+    pub yards_per_carry: f64,
+    pub rushing_touchdowns: u32,
+    pub longest_rush: u32,
+    pub receptions: u32,
+    pub receiving_yards: i32,
+    pub yards_per_reception: f64,
+    pub receiving_touchdowns: u32,
+    pub longest_reception: u32,
+    pub all_purpose_yards: i32,
+    pub fumbles: u32,
+    pub fumbles_lost: u32,
+}
+
+// Wide Receiver / Tight End Stats
+#[derive(Debug, Serialize, Clone)]
+pub struct ReceiverStats {
+    pub player: String,
+    pub team: String,
+    pub opponent: String,
+    pub week: u32,
+    pub receptions: u32,
+    pub receiving_yards: i32,
+    pub yards_per_reception: f64,
+    pub receiving_touchdowns: u32,
+    pub longest_reception: u32,
+    pub fumbles: u32,
+    pub fumbles_lost: u32,
+}
+
+// Defensive Player Stats (DL/LB and DB)
+#[derive(Debug, Serialize, Clone)]
+pub struct DefensiveStats {
+    pub player: String,
+    pub team: String,
+    pub opponent: String,
+    pub week: u32,
+    pub total_tackles: f64,
+    pub solo_tackles: f64,
+    pub tackles_for_loss: f64,
+    pub sacks: f64,
+    pub quarterback_hurries: f64,
+    pub pass_breakups: f64,
+    pub interceptions: u32,
+    pub interception_return_yards: i32,
+    pub interception_return_tds: u32,
+    pub fumbles_recovered: f64,
+    pub defensive_touchdowns: u32,
+}

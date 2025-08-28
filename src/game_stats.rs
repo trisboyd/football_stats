@@ -60,7 +60,14 @@ async fn process_game_response(
         println!("Found {} QB records", qb_stats_list.len());
     }
     
-    write_qb_stats_to_csv(&qb_stats_list, target_team, week, &opponent_name)?;
+    // Create output directory for this team/week
+    let output_dir = format!("output/{}/week_{}", target_team, week);
+    std::fs::create_dir_all(&output_dir)?;
+    
+    write_qb_stats_to_csv(&qb_stats_list, target_team, week, &opponent_name, &output_dir)?;
+    
+    // Process all other position stats
+    crate::position_stats::analyze_all_position_stats(teams, target_team, year, week).await?;
     
     Ok(())
 }
@@ -445,15 +452,13 @@ fn write_qb_stats_to_csv(
     team: &str,
     week: u32,
     opponent: &str,
+    output_dir: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // Ensure output directory exists
-    fs::create_dir_all(OUTPUT_DIR)?;
-    
     // Create filename
     let safe_team = team.replace(' ', "_").replace("&", "and");
     let safe_opponent = opponent.replace(' ', "_").replace("&", "and");
     let filename = format!("{}/QB_Stats_{}_vs_{}_Week_{}.csv", 
-        OUTPUT_DIR, safe_team, safe_opponent, week);
+        output_dir, safe_team, safe_opponent, week);
     let path = Path::new(&filename);
     
     let mut writer = Writer::from_path(path)?;
