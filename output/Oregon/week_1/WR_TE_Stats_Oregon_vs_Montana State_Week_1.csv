@@ -1,11 +1,12 @@
-Player,Team,Opponent,Week,Receptions,Receiving_Yards,Yards_Per_Reception,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
-Malik Benson,Oregon,Montana State,1,5,51,10.2,1,18,0,0
-Gary Bryant Jr.,Oregon,Montana State,1,4,31,7.8,1,14,1,0
-Makhi Hughes,Oregon,Montana State,1,1,4,4.0,0,4,0,0
-Jay Harris,Oregon,Montana State,1,1,50,50.0,0,50,0,0
-Kenyon Sadiq,Oregon,Montana State,1,1,20,20.0,1,20,0,0
-Jeremiah McClellan,Oregon,Montana State,1,1,13,13.0,0,13,0,0
-Justius Lowe,Oregon,Montana State,1,1,12,12.0,0,12,0,0
-Kyler Kasper,Oregon,Montana State,1,1,40,40.0,0,40,0,0
-Dakorien Moore,Oregon,Montana State,1,3,26,8.7,0,13,0,0
-Cooper Perry,Oregon,Montana State,1,1,6,6.0,0,6,0,0
+Player,Team,Opponent,Week,Targets,Receptions,Catch_%,Target_Share_%,Receiving_Yards,Yards_Per_Reception,Yards_Per_Target,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
+Justius Lowe,Oregon,Montana State,1,2,1,50.0,8.0,12,12.0,6.0,0,12,0,0
+Kenyon Sadiq,Oregon,Montana State,1,3,1,33.3,12.0,20,20.0,6.7,1,20,0,0
+Kyler Kasper,Oregon,Montana State,1,2,1,50.0,8.0,40,40.0,20.0,0,40,0,0
+Gary Bryant Jr.,Oregon,Montana State,1,4,4,100.0,16.0,31,7.8,7.8,1,14,1,0
+Dakorien Moore,Oregon,Montana State,1,3,3,100.0,12.0,26,8.7,8.7,0,13,0,0
+Malik Benson,Oregon,Montana State,1,5,5,100.0,20.0,51,10.2,10.2,1,18,0,0
+Cooper Perry,Oregon,Montana State,1,1,1,100.0,4.0,6,6.0,6.0,0,6,0,0
+Makhi Hughes,Oregon,Montana State,1,1,1,100.0,4.0,4,4.0,4.0,0,4,0,0
+Dierre Hill Jr.,Oregon,Montana State,1,1,0,0.0,4.0,0,0.0,0.0,0,0,0,0
+Jay Harris,Oregon,Montana State,1,1,1,100.0,4.0,50,50.0,50.0,0,50,0,0
+Jeremiah McClellan,Oregon,Montana State,1,2,1,50.0,8.0,13,13.0,6.5,0,13,0,0

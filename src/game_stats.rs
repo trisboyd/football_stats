@@ -51,8 +51,19 @@ async fn process_game_response(
     
     println!("Processing stats for {} vs {}", target_team, opponent_name);
     
-    // Use new method that processes sack data
-    let qb_stats_list = extract_qb_stats_with_sack_data(teams, target_team, year, week).await;
+    // Fetch play-by-play data ONCE for this team - reuse for QB sacks AND WR/TE targets
+    println!("Fetching play-by-play data for {} vs {} Week {}...", target_team, opponent_name, week);
+    let play_by_play_data = get_play_by_play_data(target_team, year, week).await?;
+    
+    if play_by_play_data.is_empty() {
+        println!("⚠️  No play-by-play data available for {} Week {} - using aggregate stats only", year, week);
+        println!("    (Limited QB sack data and no WR target data available)");
+    } else {
+        println!("✅ Found {} plays for enhanced analysis", play_by_play_data.len());
+    }
+    
+    // Process QB stats with shared play-by-play data
+    let qb_stats_list = extract_qb_stats_with_play_data(teams, target_team, year, week, &play_by_play_data);
     
     if qb_stats_list.is_empty() {
         println!("No QB stats found for {}", target_team);
@@ -66,19 +77,20 @@ async fn process_game_response(
     
     write_qb_stats_to_csv(&qb_stats_list, target_team, week, &opponent_name, &output_dir)?;
     
-    // Process all other position stats
-    crate::position_stats::analyze_all_position_stats(teams, target_team, year, week).await?;
+    // Process all other position stats with shared play-by-play data
+    crate::position_stats::analyze_all_position_stats_with_plays(teams, target_team, year, week, &play_by_play_data).await?;
     
     Ok(())
 }
 
 // REMOVED: extract_qb_stats_from_api_data function - replaced with exact sack data version
 
-async fn extract_qb_stats_with_sack_data(
+fn extract_qb_stats_with_play_data(
     teams: &[ApiTeamStats],
     target_team: &str,
     year: u32,
-    week: u32
+    week: u32,
+    play_by_play_data: &[serde_json::Value],
 ) -> Vec<QBStats> {
     let mut target_team_stats = None;
     let mut opponent_name = String::new();
@@ -97,21 +109,8 @@ async fn extract_qb_stats_with_sack_data(
         None => return Vec::new(),
     };
     
-    // Get exact sack data from plays API (fallback if not available)
-    let qb_sacks = match get_qb_sacks_from_plays_api(&target_stats.school, year, week).await {
-        Ok(sacks) => {
-            if sacks.is_empty() {
-                println!("⚠️  No play-by-play data available for {} Week {} - using aggregate stats only", year, week);
-                println!("    (True rushing yards = aggregate rushing yards, sack data unavailable)");
-            }
-            sacks
-        },
-        Err(e) => {
-            println!("⚠️  Could not access play-by-play data: {}", e);
-            println!("    Using aggregate stats only (True rushing yards = aggregate rushing yards)");
-            HashMap::new()
-        }
-    };
+    // Extract sack data from pre-fetched play-by-play data
+    let qb_sacks = extract_qb_sacks_from_plays(play_by_play_data, &target_stats.school);
     
     let mut qb_data: HashMap<String, QBStatsBuilder> = HashMap::new();
     
@@ -354,13 +353,12 @@ fn write_qb_stats_to_csv(
     Ok(())
 }
 
-// Get exact sack data for QBs from plays API
-async fn get_qb_sacks_from_plays_api(
+// Fetch play-by-play data once for reuse across QB and position analysis
+async fn get_play_by_play_data(
     team: &str,
     year: u32, 
     week: u32
-) -> Result<HashMap<String, (u32, i32)>, Box<dyn std::error::Error>> {
-    use std::collections::HashMap;
+) -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
     use serde_json::Value;
     
     let client = reqwest::Client::new();
@@ -370,8 +368,6 @@ async fn get_qb_sacks_from_plays_api(
         "https://api.collegefootballdata.com/plays?year={}&week={}&team={}", 
         year, week, team
     );
-    
-    println!("Making plays API request to: {}", url);
     
     let response = client
         .get(&url)
@@ -384,6 +380,16 @@ async fn get_qb_sacks_from_plays_api(
     }
     
     let plays: Vec<Value> = response.json().await?;
+    Ok(plays)
+}
+
+// Extract QB sack data from pre-fetched play-by-play data
+fn extract_qb_sacks_from_plays(
+    plays: &[serde_json::Value], 
+    team: &str
+) -> HashMap<String, (u32, i32)> {
+    use std::collections::HashMap;
+    
     let mut qb_sacks: HashMap<String, (u32, i32)> = HashMap::new();
     
     for play in plays {
@@ -405,12 +411,14 @@ async fn get_qb_sacks_from_plays_api(
         }
     }
     
-    println!("Found sack data for {} QBs from plays API", qb_sacks.len());
-    for (qb, (sacks, yards)) in &qb_sacks {
-        println!("  {}: {} sacks for {} yards", qb, sacks, yards);
+    if !qb_sacks.is_empty() {
+        println!("Found sack data for {} QBs from play-by-play", qb_sacks.len());
+        for (qb, (sacks, yards)) in &qb_sacks {
+            println!("  {}: {} sacks for {} yards", qb, sacks, yards);
+        }
     }
     
-    Ok(qb_sacks)
+    qb_sacks
 }
 
 // Extract QB name from sack play text

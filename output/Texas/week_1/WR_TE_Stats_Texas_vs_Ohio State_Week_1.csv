@@ -1,8 +1,11 @@
-Player,Team,Opponent,Week,Receptions,Receiving_Yards,Yards_Per_Reception,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
-Tre Wisner,Texas,Ohio State,1,1,5,5.0,0,5,0,0
-DeAndre Moore Jr.,Texas,Ohio State,1,2,6,3.0,0,9,0,0
-Parker Livingstone,Texas,Ohio State,1,2,47,23.5,1,32,0,0
-Ryan Wingo,Texas,Ohio State,1,2,35,17.5,0,28,0,0
-Daylan Mccutcheon,Texas,Ohio State,1,1,2,2.0,0,2,0,0
-Jack Endries,Texas,Ohio State,1,4,50,12.5,0,30,0,0
-CJ Baxter Jr.,Texas,Ohio State,1,5,25,5.0,0,6,0,0
+Player,Team,Opponent,Week,Targets,Receptions,Catch_%,Target_Share_%,Receiving_Yards,Yards_Per_Reception,Yards_Per_Target,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
+Daylan McCutcheon,Texas,Ohio State,1,1,0,0.0,3.4,0,0.0,0.0,0,0,0,0
+DeAndre Moore Jr.,Texas,Ohio State,1,4,2,50.0,13.8,6,3.0,1.5,0,9,0,0
+CJ Baxter,Texas,Ohio State,1,5,0,0.0,17.2,0,0.0,0.0,0,0,0,0
+Tre Wisner,Texas,Ohio State,1,0,1,0.0,0.0,5,5.0,0.0,0,5,0,0
+Jack Endries,Texas,Ohio State,1,6,4,66.7,20.7,50,12.5,8.3,0,30,0,0
+Quintrevion Wisner,Texas,Ohio State,1,2,0,0.0,6.9,0,0.0,0.0,0,0,0,0
+CJ Baxter Jr.,Texas,Ohio State,1,0,5,0.0,0.0,25,5.0,0.0,0,6,0,0
+Daylan Mccutcheon,Texas,Ohio State,1,0,1,0.0,0.0,2,2.0,0.0,0,2,0,0
+Ryan Wingo,Texas,Ohio State,1,6,2,33.3,20.7,35,17.5,5.8,0,28,0,0
+Parker Livingstone,Texas,Ohio State,1,5,2,40.0,17.2,47,23.5,9.4,1,32,0,0

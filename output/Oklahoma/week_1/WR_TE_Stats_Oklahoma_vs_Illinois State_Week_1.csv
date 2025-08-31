@@ -1,10 +1,12 @@
-Player,Team,Opponent,Week,Receptions,Receiving_Yards,Yards_Per_Reception,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
-Tory Blaylock,Oklahoma,Illinois State,1,2,18,9.0,0,16,0,0
-Keontez Lewis,Oklahoma,Illinois State,1,9,119,13.2,2,28,0,0
-Jacob Jordan,Oklahoma,Illinois State,1,1,27,27.0,0,27,0,0
-Xavier Robinson,Oklahoma,Illinois State,1,2,12,6.0,0,6,0,0
-Carson Kent,Oklahoma,Illinois State,1,1,7,7.0,0,7,0,0
-Isaiah Sategna Iii,Oklahoma,Illinois State,1,2,16,8.0,0,16,0,0
-Jaren Kanak,Oklahoma,Illinois State,1,5,90,18.0,0,48,1,1
-Will Huggins,Oklahoma,Illinois State,1,1,15,15.0,0,15,0,0
-Deion Burks,Oklahoma,Illinois State,1,7,88,12.6,1,28,0,0
+Player,Team,Opponent,Week,Targets,Receptions,Catch_%,Target_Share_%,Receiving_Yards,Yards_Per_Reception,Yards_Per_Target,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
+Xavier Robinson,Oklahoma,Illinois State,1,2,2,100.0,5.7,12,6.0,6.0,0,6,0,0
+Keontez Lewis,Oklahoma,Illinois State,1,11,9,81.8,31.4,119,13.2,10.8,2,28,0,0
+Jaren Kanak,Oklahoma,Illinois State,1,5,5,100.0,14.3,90,18.0,18.0,0,48,1,1
+Jacob Jordan,Oklahoma,Illinois State,1,1,1,100.0,2.9,27,27.0,27.0,0,27,0,0
+Deion Burks,Oklahoma,Illinois State,1,7,7,100.0,20.0,88,12.6,12.6,1,28,0,0
+Tory Blaylock,Oklahoma,Illinois State,1,2,2,100.0,5.7,18,9.0,9.0,0,16,0,0
+Isaiah Sategna Iii,Oklahoma,Illinois State,1,3,2,66.7,8.6,16,8.0,5.3,0,16,0,0
+Jaydn Ott,Oklahoma,Illinois State,1,1,0,0.0,2.9,0,0.0,0.0,0,0,0,0
+Jer'Michael Carter,Oklahoma,Illinois State,1,1,0,0.0,2.9,0,0.0,0.0,0,0,0,0
+Will Huggins,Oklahoma,Illinois State,1,1,1,100.0,2.9,15,15.0,15.0,0,15,0,0
+Carson Kent,Oklahoma,Illinois State,1,1,1,100.0,2.9,7,7.0,7.0,0,7,0,0

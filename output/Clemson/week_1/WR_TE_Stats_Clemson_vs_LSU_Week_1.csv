@@ -1,8 +1,9 @@
-Player,Team,Opponent,Week,Receptions,Receiving_Yards,Yards_Per_Reception,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
-Olsen Patt-Henry,Clemson,LSU,1,2,22,11.0,0,19,0,0
-T.J. Moore,Clemson,LSU,1,4,55,13.8,0,26,0,0
-Tyler Brown,Clemson,LSU,1,4,43,10.8,0,17,0,0
-Christian Bentancur,Clemson,LSU,1,2,23,11.5,0,20,0,0
-Adam Randall,Clemson,LSU,1,2,14,7.0,0,11,0,0
-Josh Sapp,Clemson,LSU,1,1,7,7.0,0,7,0,0
-Bryant Wesco Jr.,Clemson,LSU,1,4,66,16.5,0,21,0,0
+Player,Team,Opponent,Week,Targets,Receptions,Catch_%,Target_Share_%,Receiving_Yards,Yards_Per_Reception,Yards_Per_Target,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
+Olsen Patt-Henry,Clemson,LSU,1,2,2,100.0,6.1,22,11.0,11.0,0,19,0,0
+T.J. Moore,Clemson,LSU,1,9,4,44.4,27.3,55,13.8,6.1,0,26,0,0
+Antonio Williams,Clemson,LSU,1,2,0,0.0,6.1,0,0.0,0.0,0,0,0,0
+Christian Bentancur,Clemson,LSU,1,2,2,100.0,6.1,23,11.5,11.5,0,20,0,0
+Bryant Wesco Jr.,Clemson,LSU,1,7,4,57.1,21.2,66,16.5,9.4,0,21,0,0
+Tyler Brown,Clemson,LSU,1,7,4,57.1,21.2,43,10.8,6.1,0,17,0,0
+Josh Sapp,Clemson,LSU,1,2,1,50.0,6.1,7,7.0,3.5,0,7,0,0
+Adam Randall,Clemson,LSU,1,2,2,100.0,6.1,14,7.0,7.0,0,11,0,0

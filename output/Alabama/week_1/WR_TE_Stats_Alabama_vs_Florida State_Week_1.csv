@@ -1,9 +1,10 @@
-Player,Team,Opponent,Week,Receptions,Receiving_Yards,Yards_Per_Reception,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
-Kevin Riley,Alabama,Florida State,1,1,4,4.0,0,4,0,0
-Josh Cuevas,Alabama,Florida State,1,3,31,10.3,1,27,0,0
-Rico Scott,Alabama,Florida State,1,2,19,9.5,1,13,0,0
-Isaiah Horton,Alabama,Florida State,1,1,6,6.0,0,6,0,0
-Richard Young,Alabama,Florida State,1,1,6,6.0,0,6,0,0
-Daniel Hill,Alabama,Florida State,1,2,12,6.0,0,9,0,0
-Germie Bernard,Alabama,Florida State,1,8,146,18.2,0,37,0,0
-Ryan Williams,Alabama,Florida State,1,5,30,6.0,0,11,0,0
+Player,Team,Opponent,Week,Targets,Receptions,Catch_%,Target_Share_%,Receiving_Yards,Yards_Per_Reception,Yards_Per_Target,Receiving_TDs,Longest_Reception,Fumbles,Fumbles_Lost
+Germie Bernard,Alabama,Florida State,1,11,8,72.7,31.4,146,18.2,13.3,0,37,0,0
+Daniel Hill,Alabama,Florida State,1,2,2,100.0,5.7,12,6.0,6.0,0,9,0,0
+Jalen Hale,Alabama,Florida State,1,1,0,0.0,2.9,0,0.0,0.0,0,0,0,0
+Rico Scott,Alabama,Florida State,1,4,2,50.0,11.4,19,9.5,4.8,1,13,0,0
+Isaiah Horton,Alabama,Florida State,1,1,1,100.0,2.9,6,6.0,6.0,0,6,0,0
+Josh Cuevas,Alabama,Florida State,1,5,3,60.0,14.3,31,10.3,6.2,1,27,0,0
+Richard Young,Alabama,Florida State,1,1,1,100.0,2.9,6,6.0,6.0,0,6,0,0
+Kevin Riley,Alabama,Florida State,1,1,1,100.0,2.9,4,4.0,4.0,0,4,0,0
+Ryan Williams,Alabama,Florida State,1,9,5,55.6,25.7,30,6.0,3.3,0,11,0,0
